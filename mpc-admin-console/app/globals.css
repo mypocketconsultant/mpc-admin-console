@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body {
+  background: #f7f8fc;
+  color: #0f172a;
+}
+
+body {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input::placeholder {
+  color: #94a3b8;
+}
