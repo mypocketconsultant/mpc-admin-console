@@ -31,7 +31,10 @@ export default function SystemControlsPage() {
     setSaving(true);
     setMessage('');
     try {
-      const res = await adminApi.updateSystemControls(controls);
+      const res = await adminApi.updateSystemControls({
+        ...controls,
+        appVersion: controls.appVersion || '', // ← never send null
+      });
       setControls(res.data);
       setMessage('System controls updated successfully.');
     } catch (err) {

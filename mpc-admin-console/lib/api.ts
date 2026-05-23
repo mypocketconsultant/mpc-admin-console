@@ -75,9 +75,12 @@ export const adminApi = {
     }),
 
   listUsers: (search = "") =>
-    request<ApiEnvelope<{ users: UserListItem[] }>>(
+    request<ApiEnvelope<UserListItem[]>>(
       `/v1/admin/users${search ? `?search=${encodeURIComponent(search)}` : ""}`
-    ),
+    ).then((res) => ({
+      ...res,
+      data: { users: Array.isArray(res.data) ? res.data : [] },
+    })),
 
   getUser: (userId: string) =>
     request<ApiEnvelope<UserDetail>>(`/v1/admin/users/${userId}`),

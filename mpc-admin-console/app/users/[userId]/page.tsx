@@ -21,7 +21,7 @@ export default function UserDetailPage() {
     if (!userId) return;
     adminApi
       .getUser(userId)
-      .then((res) => setUser(res.data))
+      .then((res) => setUser((res.data as any).user ?? res.data))
       .catch((err) => setMessage(err.message));
   }, [userId]);
 
@@ -35,7 +35,9 @@ export default function UserDetailPage() {
     }
   }
 
-  const name = user ? `${user.firstName} ${user.lastName}` : 'User detail';
+  const name = user
+    ? `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim() || 'Unnamed user'
+    : 'User detail';
 
   return (
     <AdminShell title="Users" subtitle="Inspect a specific user and clear their session memory if needed.">
@@ -51,7 +53,7 @@ export default function UserDetailPage() {
           <dl className="space-y-4 text-sm">
             <div className="flex items-center justify-between border-b border-line pb-3">
               <dt className="text-muted">User ID</dt>
-              <dd className="font-medium text-ink">{user?.id || userId}</dd>
+              <dd className="font-medium text-ink break-all">{user?.id || userId}</dd>
             </div>
             <div className="flex items-center justify-between border-b border-line pb-3">
               <dt className="text-muted">Email</dt>
@@ -62,14 +64,22 @@ export default function UserDetailPage() {
               <dd className="font-medium text-ink">{user?.preferredModule || '—'}</dd>
             </div>
             <div className="flex items-center justify-between border-b border-line pb-3">
+              <dt className="text-muted">Country</dt>
+              <dd className="font-medium text-ink">{user?.country || '—'}</dd>
+            </div>
+            <div className="flex items-center justify-between border-b border-line pb-3">
               <dt className="text-muted">Last updated</dt>
               <dd className="font-medium text-ink">{formatDateTime(user?.updatedAt)}</dd>
+            </div>
+            <div className="flex items-center justify-between border-b border-line pb-3">
+              <dt className="text-muted">Member since</dt>
+              <dd className="font-medium text-ink">{formatDateTime(user?.createdAt)}</dd>
             </div>
           </dl>
 
           <button
             onClick={clearSessionMemory}
-            className="mt-6 rounded-2xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-700"
+            className="mt-6 w-full rounded-2xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-700"
           >
             Clear session memory
           </button>
@@ -77,25 +87,24 @@ export default function UserDetailPage() {
 
         <Panel title="Recent activity">
           <div className="space-y-3">
-            {(user?.recentActivity?.length
-              ? user.recentActivity
-              : [
-                  { module: 'Career', timestamp: new Date().toISOString(), status: 'OK', summary: 'Run a 10-sec scan of my resume' },
-                  { module: 'Faith', timestamp: new Date().toISOString(), status: 'OK', summary: 'Generated devotional content' },
-                  { module: 'Life Advisory', timestamp: new Date().toISOString(), status: 'OK', summary: 'Created action plan' },
-                ]
-            ).map((item, index) => (
-              <div key={index} className="rounded-2xl border border-line px-4 py-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="font-semibold text-ink">{item.module}</p>
-                    <p className="mt-1 text-sm text-muted">{item.summary || 'Recent module interaction'}</p>
+            {user?.recentActivity?.length ? (
+              user.recentActivity.map((item, index) => (
+                <div key={index} className="rounded-2xl border border-line px-4 py-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-ink">{item.module}</p>
+                      <p className="mt-1 text-sm text-muted">{item.summary || 'Recent module interaction'}</p>
+                    </div>
+                    <StatusBadge label={item.status} />
                   </div>
-                  <StatusBadge label={item.status} />
+                  <p className="mt-3 text-xs text-slate-500">{formatDateTime(item.timestamp)}</p>
                 </div>
-                <p className="mt-3 text-xs text-slate-500">{formatDateTime(item.timestamp)}</p>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-dashed border-line px-4 py-10 text-center text-sm text-muted">
+                No recent activity recorded for this user.
               </div>
-            ))}
+            )}
           </div>
         </Panel>
       </div>

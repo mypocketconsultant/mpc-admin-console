@@ -8,7 +8,7 @@ import { Logo } from '@/components/logo';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('admin@mypocketconsultant.com');
+  const [email, setEmail] = useState('effysarah3108@gmail.com');
   const [password, setPassword] = useState('ChangeMe123!');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -35,9 +35,7 @@ export default function LoginPage() {
         <div className="mt-auto max-w-xl">
           <p className="text-sm uppercase tracking-[0.28em] text-white/70">Admin access</p>
           <h1 className="mt-6 text-5xl font-bold leading-tight">Monitor operations, users, and system controls from one place.</h1>
-          <p className="mt-5 text-lg text-white/80">
-            This starter includes the admin login flow and the three screens needed for tomorrow’s demo.
-          </p>
+          
           <div className="mt-10 grid grid-cols-3 gap-4 text-sm">
             {['Dashboard metrics', 'User lookup', 'System toggles'].map((item) => (
               <div key={item} className="rounded-2xl border border-white/15 bg-white/10 px-4 py-4 backdrop-blur">
@@ -53,7 +51,7 @@ export default function LoginPage() {
           <Logo />
           <div className="mt-8">
             <h2 className="text-3xl font-bold text-ink">Sign in to Admin Console</h2>
-            <p className="mt-2 text-sm text-muted">Use the seeded admin credentials or replace them with your own.</p>
+            <p className="mt-2 text-sm text-muted">Use admin credentials to access the console.</p>
           </div>
 
           <form className="mt-8 space-y-5" onSubmit={handleSubmit}>

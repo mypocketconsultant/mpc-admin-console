@@ -1,80 +1,80 @@
-export type AdminUser = {
+export interface ApiEnvelope<T> {
+  status: string;
+  message: string;
+  data: T;
+}
+
+export interface AdminUser {
   id: string;
   email: string;
   fullName: string;
   role: string;
   isActive: boolean;
-  lastLoginAt?: string | null;
-  createdAt?: string;
-  updatedAt?: string;
-};
+  lastLoginAt?: string;
+}
 
-export type DashboardResponse = {
-  systemStatus: {
-    aiBackend: string;
-    apiBackend: string;
-    redis: string;
-    qdrant: string;
-  };
+export interface RecentError {
+  timestamp: string;
+  module: string;
+  summary: string;
+}
+
+export interface LatestUser {
+  id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  preferredModule?: string;
+  updatedAt?: string;
+}
+
+export interface DashboardResponse {
+  systemStatus: Record<string, string>;
   stats: {
     totalUsers: number;
     activeUsersToday: number;
     failedRequestsToday: number;
     backgroundJobFailures: number;
   };
-  recentErrors: Array<{
-    timestamp: string;
-    module: string;
-    summary: string;
-  }>;
-  latestUsers: Array<{
-    id: string;
-    fullName: string;
-    email: string;
-    preferredModule?: string | null;
-    createdAt?: string;
-  }>;
-  controls: SystemControls | null;
-};
+  recentErrors: RecentError[];
+  latestUsers: LatestUser[];
+}
 
-export type SystemControls = {
+export interface SystemControls {
   id?: string;
   sttEnabled: boolean;
   fileUploadsEnabled: boolean;
   vectorRetrievalEnabled: boolean;
   backgroundJobsEnabled: boolean;
   environmentLabel: string;
-  appVersion?: string | null;
-};
+  appVersion?: string;
+}
 
-export type UserListItem = {
+export interface UserListItem {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  preferredModule?: string | null;
+  firstName?: string;
+  lastName?: string;
+  preferredModule?: string;
   createdAt?: string;
   updatedAt?: string;
-};
+}
 
-export type UserDetail = {
+export interface UserDetail {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  preferredModule?: string | null;
+  firstName?: string;
+  lastName?: string;
+  preferredModule?: string;
+  country?: string;
   createdAt?: string;
   updatedAt?: string;
-  recentActivity?: Array<{
+  currentResumeId?: string;
+  recentActivity?: {
     module: string;
-    timestamp: string;
+    summary: string;
     status: string;
-    summary?: string;
-  }>;
-};
-
-export type ApiEnvelope<T> = {
-  status: string;
-  message: string;
-  data: T;
-};
+    timestamp: string;
+  }[];
+}
